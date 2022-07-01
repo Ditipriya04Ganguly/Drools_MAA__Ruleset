@@ -1,0 +1,51 @@
+package backwardchaining;
+
+import model.Patient;
+import java.time.LocalDate;
+dialect "mvel"
+
+function boolean checkValidDate(String date){
+      LocalDate currentDate = LocalDate.now();
+      LocalDate currentDateMinus6Months = currentDate.minusMonths(6);
+      System.out.println("currentDateMinus6Months : " + currentDateMinus6Months);
+      LocalDate LastAssessed
+                  = LocalDate.parse(date);
+      System.out.println("LastAssessed: " + LastAssessed);
+      if (!LastAssessed.isBefore(currentDateMinus6Months)) {
+           return true;
+      }
+      return false;
+}
+
+
+
+
+
+
+rule "Risk Flag Is Dysphagia"
+  when
+  $p: Patient(status.equals("Active"),riskFlag.contains("Dysphagia"),checkValidDate(timeframe))
+  then
+   System.out.println( "Dysphagia can be risk" );
+   System.out.println( "This can be prefilled" );
+   end
+
+rule "Risk Flag Is Weight Loss"
+  when
+  $p: Patient(status.equals("Active"),riskFlag.contains("Weight Loss"),checkValidDate(timeframe))
+  then
+   System.out.println( "Weight Loss can be risk" );
+   System.out.println( "This can be prefilled" );
+   end
+
+rule "Risk Flag Is Early Satiety"
+  when
+  $p: Patient(status.equals("Active"),riskFlag.contains("Early Satiety"),checkValidDate(timeframe))
+  then
+   System.out.println( "Early Satiety can be risk" );
+   System.out.println( "This can be prefilled" );
+   end
+
+
+
+
